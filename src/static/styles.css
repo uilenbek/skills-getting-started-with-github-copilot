@@ -1,3 +1,8 @@
+/* Add your styles here */
+
+#participant-list {
+  padding-left: 0;
+}
 * {
   box-sizing: border-box;
   margin: 0;
