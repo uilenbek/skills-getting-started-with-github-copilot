@@ -20,11 +20,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Maak een mooie deelnemerslijst
+        let participantsHTML = "";
+        if (details.participants.length > 0) {
+          participantsHTML = `
+            <div class="participants-section">
+              <strong>Participants:</strong>
+              <ul class="participants-list">
+                ${details.participants.map(email => `<li>${email}</li>`).join("")}
+              </ul>
+            </div>
+          `;
+        } else {
+          participantsHTML = `
+            <div class="participants-section">
+              <strong>Participants:</strong>
+              <span class="no-participants">No participants yet</span>
+            </div>
+          `;
+        }
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsHTML}
         `;
 
         activitiesList.appendChild(activityCard);
@@ -84,3 +105,42 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize app
   fetchActivities();
 });
+      const form = document.getElementById('registration-form');
+      const participantList = document.getElementById('participant-list');
+
+      form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const nameInput = document.getElementById('name');
+          const name = nameInput.value.trim();
+          if (name) {
+              addParticipant(name);
+              nameInput.value = '';
+          }
+      });
+
+      function addParticipant(name) {
+          const li = document.createElement('li');
+          li.style.listStyle = 'none'; // Verberg bullet point
+          li.style.display = 'flex';
+          li.style.alignItems = 'center';
+
+          const nameSpan = document.createElement('span');
+          nameSpan.textContent = name;
+          nameSpan.style.flexGrow = '1';
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.innerHTML = '🗑️';
+          deleteBtn.title = 'Verwijder deelnemer';
+          deleteBtn.style.marginLeft = '8px';
+          deleteBtn.style.background = 'none';
+          deleteBtn.style.border = 'none';
+          deleteBtn.style.cursor = 'pointer';
+          deleteBtn.style.fontSize = '1.1em';
+          deleteBtn.addEventListener('click', function() {
+              participantList.removeChild(li);
+          });
+
+          li.appendChild(nameSpan);
+          li.appendChild(deleteBtn);
+          participantList.appendChild(li);
+      }
